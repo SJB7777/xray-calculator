@@ -22,7 +22,7 @@ jobs:
           sed -i "s|styles.css|styles.css?v=${COMMIT_HASH}|g" index.html
 
       - name: Deploy to GitHub Pages
-        uses: uses: peaceiris/actions-gh-pages@v4.0.0
+        uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
