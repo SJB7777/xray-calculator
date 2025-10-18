@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>X-ray Calculator</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="./assets/js/main.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="calc-card">
+      <h2>Frequency Energy Wavelength</h2>
+
+      <div class="field">
+        <label for="energy">Energy (E)</label>
+        <div class="input-wrap">
+          <input type="number" id="energy" placeholder="Enter energy" />
+          <select id="energy-unit" class="unit">
+            <option value="1e3">keV</option>
+            <option value="1">eV</option>
+            <option value="1e6">MeV</option>
+            <option value="1.60218e-19">J</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="wavelength">Wavelength (λ)</label>
+        <div class="input-wrap">
+          <input type="number" id="wavelength" placeholder="Enter wavelength" />
+          <select id="wavelength-unit" class="unit">
+            <option value="1e-10">Å</option>
+            <option value="1e-9">nm</option>
+            <option value="1e-6">μm</option>
+            <option value="1e-3">mm</option>
+            <option value="1">m</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="frequency">Frequency (ν)</label>
+        <div class="input-wrap">
+          <input type="number" id="frequency" placeholder="Enter frequency" />
+          <select id="frequency-unit" class="unit">
+            <option value="1e15">PHz</option>
+            <option value="1e12">THz</option>
+            <option value="1e9">GHz</option>
+            <option value="1e6">MHz</option>
+            <option value="1e3">kHz</option>
+            <option value="1">Hz</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🔸추후 확장 가능 영역 -->
+    <section class="calc-card placeholder">
+      <h2>Next Function Module</h2>
+      <p>Coming soon: Bragg’s Law Calculator or Reflectivity Estimator</p>
+    </section>
+  </main>
+</body>
+</html>
