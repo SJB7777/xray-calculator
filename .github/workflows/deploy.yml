@@ -1,0 +1,28 @@
+name: Build & Deploy Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get short commit hash
+        id: vars
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Inject commit hash into index.html
+        run: |
+          sed -i "s|main.js|main.js?v=${COMMIT_HASH}|g" index.html
+          sed -i "s|styles.css|styles.css?v=${COMMIT_HASH}|g" index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
