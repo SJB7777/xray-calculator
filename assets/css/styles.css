@@ -35,6 +35,17 @@ main {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* 최상단 제목 */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid #e0e4e8;
+  padding-bottom: 0.5rem;
+}
+
 h2 {
   text-align: center;
   color: var(--accent);
