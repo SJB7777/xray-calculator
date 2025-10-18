@@ -43,19 +43,26 @@ h2 {
   letter-spacing: 0.5px;
 }
 
+/* 입력 필드 공통 */
 .field {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
   margin-bottom: 1rem;
-  gap: 0.5em;
+  flex-wrap: wrap;
 }
 
 label {
-  flex: 1.1;
+  flex: 1.2;
   font-weight: 500;
 }
 
+.input-wrap, .field input, .field select, output {
+  font-size: 1em;
+}
+
+/* 통합 input-wrap */
 .input-wrap {
   flex: 2;
   display: flex;
@@ -72,10 +79,9 @@ label {
 }
 
 input {
-  width: 100%;
+  flex: 1;
   border: none;
   outline: none;
-  font-size: 1em;
   background: transparent;
 }
 
@@ -85,6 +91,18 @@ select.unit {
   background: transparent;
   font-size: 0.95em;
   color: #555;
+}
+
+/* output 강조 */
+output {
+  flex: 0.8;
+  text-align: right;
+  font-weight: 600;
+  color: var(--accent);
+  background: #f0f4f8;
+  border-radius: 6px;
+  padding: 0.3em 0.6em;
+  border: 1px solid var(--border);
 }
 
 .placeholder {
