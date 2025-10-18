@@ -24,10 +24,11 @@ jobs:
           sed -i "s|main.js|main.js?v=${COMMIT_HASH}|g" index.html
           sed -i "s|styles.css|styles.css?v=${COMMIT_HASH}|g" index.html
 
-      # GitHub Pages에 배포
+      # GitHub Pages에 강제 배포
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}  # 자동 제공 토큰
           publish_dir: .                             # 루트 디렉토리 배포
           publish_branch: gh-pages                   # gh-pages 브랜치로 배포
+          force_orphan: true                         # 기존 브랜치 초기화 후 강제 배포
