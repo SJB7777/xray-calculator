@@ -24,5 +24,6 @@ def main():
 
     print(f"[INFO] Updated index.html with random query string: {random_str}")
 
+
 if __name__ == "__main__":
     main()
