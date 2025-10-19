@@ -37,37 +37,34 @@ main {
 
 /* 최상단 제목 */
 h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111;
   text-align: center;
   margin-bottom: 3rem;
+  border-bottom: 2px solid #e0e4e8;  /* 긴 밑줄 (이것만 남김) */
+  padding-bottom: 0.5rem;
 }
 
 h1 .site-title {
-  font-size: 2.5rem;              /* 조금 줄여 균형감 */
-  font-weight: 700;                /* 지나치게 두껍지 않게 */
-  color: #111;                     /* 검정에 가까운 색 */
-  text-decoration: none;
+  font-size: 2.7rem;               /* 약간만 줄여서 자연스럽게 */
+  font-weight: 650;                /* 너무 두껍지 않게 */
+  color: #111;
+  text-decoration: none;           /* 밑줄 제거 */
   display: inline-block;
-  position: relative;
-  padding-bottom: 0.3rem;          /* 밑줄과 글자 간격 적당히 */
   font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
   transition: color 0.2s ease;
 }
 
-/* 글자 폭과 정확히 맞춘 밑줄 */
+/* 🔹 불필요한 after 밑줄 제거 */
 h1 .site-title::after {
-  content: "";
-  display: block;
-  width: 100%;                     /* 글자 폭과 동일 */
-  height: 2px;
-  background-color: #d0d7de;
-  margin-top: 0.3rem;
-  border-radius: 1px;
+  content: none;
 }
 
-/* hover 시 색상 변화 */
 h1 .site-title:hover {
   color: #0a0a0a;
 }
+
 
 h2 {
   text-align: center;
