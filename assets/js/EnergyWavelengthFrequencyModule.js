@@ -1,10 +1,5 @@
-// EnergyWavelengthFrequencyModule.js
 import { h, c } from './constants.js';
 
-/**
- * Frequency ↔ Energy ↔ Wavelength 계산
- * groupEl: section[data-group="freq-energy-wavelength"] 단위 DOM 범위
- */
 export function EnergyWavelengthFrequencyModule(groupEl) {
   if (!groupEl) return;
 
@@ -23,12 +18,14 @@ export function EnergyWavelengthFrequencyModule(groupEl) {
   if (!inputs.energy || !inputs.wavelength || !inputs.frequency ||
       !units.energy || !units.wavelength || !units.frequency) return;
 
+  // 안정적인 숫자 변환
   const toNum = input => {
-    const n = input.valueAsNumber;
+    let n = input.valueAsNumber;
+    if (isNaN(n)) n = parseFloat(input.value);
     return isNaN(n) ? null : n;
   };
 
-  const fmt = n => n.toFixed(6); // 소수점 6자리 고정
+  const fmt = n => n.toFixed(6);
 
   const update = (source) => {
     const eVal = toNum(inputs.energy);
@@ -64,8 +61,10 @@ export function EnergyWavelengthFrequencyModule(groupEl) {
     units[name].addEventListener('change', () => update(name));
   });
 
-  // 초기값 반영 (Energy 우선)
-  if (toNum(inputs.energy) !== null) update('energy');
-  else if (toNum(inputs.frequency) !== null) update('frequency');
-  else if (toNum(inputs.wavelength) !== null) update('wavelength');
+  // 초기값 반영 (DOM 반영 후)
+  setTimeout(() => {
+    if (toNum(inputs.energy) !== null) update('energy');
+    else if (toNum(inputs.frequency) !== null) update('frequency');
+    else if (toNum(inputs.wavelength) !== null) update('wavelength');
+  }, 0);
 }

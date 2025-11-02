@@ -1,58 +1,90 @@
 export function EnergyThetaQzModule(groupEl) {
   if (!groupEl) return;
 
-  const e1Input = groupEl.querySelector('[data-name="energy1"]');
-  const e1Unit = groupEl.querySelector('[data-name="energy1-unit"]');
-  const t1Input = groupEl.querySelector('[data-name="theta1"]');
-  const t1Unit = groupEl.querySelector('[data-name="theta1-unit"]');
-  const qz1Input = groupEl.querySelector('[data-name="qz1"]');
-  const qz1Unit = groupEl.querySelector('[data-name="qz1-unit"]');
+  const items = [
+    {
+      energy: groupEl.querySelector('[data-name="energy1"]'),
+      energyUnit: groupEl.querySelector('[data-name="energy1-unit"]'),
+      theta: groupEl.querySelector('[data-name="theta1"]'),
+      thetaUnit: groupEl.querySelector('[data-name="theta1-unit"]'),
+      qz: groupEl.querySelector('[data-name="qz1"]'),
+      qzUnit: groupEl.querySelector('[data-name="qz1-unit"]')
+    },
+    {
+      energy: groupEl.querySelector('[data-name="energy2"]'),
+      energyUnit: groupEl.querySelector('[data-name="energy2-unit"]'),
+      theta: groupEl.querySelector('[data-name="theta2"]'),
+      thetaUnit: groupEl.querySelector('[data-name="theta2-unit"]'),
+      qz: groupEl.querySelector('[data-name="qz2"]'),
+      qzUnit: groupEl.querySelector('[data-name="qz2-unit"]')
+    }
+  ];
 
-  const e2Input = groupEl.querySelector('[data-name="energy2"]');
-  const e2Unit = groupEl.querySelector('[data-name="energy2-unit"]');
-  const t2Input = groupEl.querySelector('[data-name="theta2"]');
-  const t2Unit = groupEl.querySelector('[data-name="theta2-unit"]');
-  const qz2Input = groupEl.querySelector('[data-name="qz2"]');
-  const qz2Unit = groupEl.querySelector('[data-name="qz2-unit"]');
+  const h = 4.135667696e-15; // eV·s
+  const c = 2.99792458e8;    // m/s
 
-  const toNumber = (input) => {
-    const n = input.valueAsNumber;
+  const toNum = input => {
+    let n = input.valueAsNumber;
+    if (isNaN(n)) n = parseFloat(input.value);
     return isNaN(n) ? null : n;
   };
 
-  const updateQz1 = () => {
-    const theta = toNumber(t1Input);
-    const energy = toNumber(e1Input);
-    if (theta === null || energy === null) return;
+  const fmt = n => n.toExponential(6);
 
-    const eVal = energy * parseFloat(e1Unit.value);
-    const lambda = 1239.841984 / eVal * 1e-10; // eV → m
-    const thetaRad = theta * parseFloat(t1Unit.value);
-    const qz = 4 * Math.PI * Math.sin(thetaRad) / lambda;
-    qz1Input.value = (qz / parseFloat(qz1Unit.value)).toExponential(6);
+  const lambdaFromEnergy = (E, unitEl) => (1239.841984 / (E * parseFloat(unitEl.value))) * 1e-10; // eV→m
+
+  const thetaToRad = (theta, unitEl) => theta * parseFloat(unitEl.value);
+
+  const radToTheta = (rad, unitEl) => rad / parseFloat(unitEl.value);
+
+  const qzFromThetaLambda = (thetaRad, lambda) => 4 * Math.PI * Math.sin(thetaRad) / lambda;
+
+  const thetaFromQzLambda = (qz, lambda) => Math.asin((qz * lambda) / (4 * Math.PI));
+
+  const update = (item, source) => {
+    const E = toNum(item.energy);
+    const theta = toNum(item.theta);
+    const qz = toNum(item.qz);
+
+    if (source === 'energy') {
+      if (E === null || theta === null) return;
+      const λ = lambdaFromEnergy(E, item.energyUnit);
+      const θRad = thetaToRad(theta, item.thetaUnit);
+      const qzVal = qzFromThetaLambda(θRad, λ);
+      item.qz.value = fmt(qzVal / parseFloat(item.qzUnit.value));
+    } 
+    else if (source === 'theta') {
+      if (theta === null || E === null) return;
+      const λ = lambdaFromEnergy(E, item.energyUnit);
+      const θRad = thetaToRad(theta, item.thetaUnit);
+      const qzVal = qzFromThetaLambda(θRad, λ);
+      item.qz.value = fmt(qzVal / parseFloat(item.qzUnit.value));
+    } 
+    else if (source === 'qz') {
+      if (qz === null || E === null) return;
+      const λ = lambdaFromEnergy(E, item.energyUnit);
+      const θRad = thetaFromQzLambda(qz * parseFloat(item.qzUnit.value), λ);
+      item.theta.value = radToTheta(θRad, item.thetaUnit);
+    }
   };
 
-  const updateQz2 = () => {
-    const theta = toNumber(t2Input);
-    const energy = toNumber(e2Input);
-    if (theta === null || energy === null) return;
+  items.forEach(item => {
+    [
+      { el: item.energy, src: 'energy' },
+      { el: item.theta, src: 'theta' },
+      { el: item.qz, src: 'qz' },
+      { el: item.energyUnit, src: 'energy' },
+      { el: item.thetaUnit, src: 'theta' },
+      { el: item.qzUnit, src: 'qz' }
+    ].forEach(({el, src}) => {
+      el.addEventListener('input', () => update(item, src));
+      el.addEventListener('change', () => update(item, src));
+    });
 
-    const eVal = energy * parseFloat(e2Unit.value);
-    const lambda = 1239.841984 / eVal * 1e-10;
-    const thetaRad = theta * parseFloat(t2Unit.value);
-    const qz = 4 * Math.PI * Math.sin(thetaRad) / lambda;
-    qz2Input.value = (qz / parseFloat(qz2Unit.value)).toExponential(6);
-  };
-
-  // 이벤트 연결
-  [t1Input, t1Unit, e1Input, e1Unit].forEach((el) =>
-    el.addEventListener("input", updateQz1)
-  );
-  [t2Input, t2Unit, e2Input, e2Unit].forEach((el) =>
-    el.addEventListener("input", updateQz2)
-  );
-
-  // 초기 계산: 이미 값이 있으면 자동 업데이트
-  updateQz1();
-  updateQz2();
+    // 초기 계산
+    setTimeout(() => {
+      if (toNum(item.energy) !== null && toNum(item.theta) !== null) update(item, 'energy');
+      else if (toNum(item.energy) !== null && toNum(item.qz) !== null) update(item, 'qz');
+    }, 0);
+  });
 }
